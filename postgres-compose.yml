@@ -1,0 +1,39 @@
+services:
+  db:
+    image: postgres
+    container_name: postgres_db1
+    ports:
+      - "5432:5432"  # Expose PostgreSQL port
+    environment:
+      POSTGRES_DB: mydb
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+    volumes:
+      - gdata1:/var/lib/postgresql/data  # Persist database data
+    networks:
+      - bootApp1
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin1
+    ports:
+      - "80:80"  # Expose pgAdmin on port 80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+      - pgadmin_data1:/var/lib/pgadmin  # Persist pgAdmin data
+    depends_on:
+      - db
+    networks:
+      - bootApp1
+
+volumes:
+  gdata1:
+    driver: local
+  pgadmin_data1:
+    driver: local
+
+networks:
+  bootApp1:
+    driver: bridge
